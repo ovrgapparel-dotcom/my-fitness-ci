@@ -686,16 +686,18 @@
     const dayOffsets = { Lundi: 0, Mardi: 1, Mercredi: 2, Jeudi: 3, Vendredi: 4, Samedi: 5 };
     const allOccurrences = [];
 
-    // Generate dated occurrences for September 2026 across 5 weeks
-    for (let week = 0; week < 5; week++) {
+    // Generate dated occurrences from August 31, 2026 through December 31, 2026 (18 Weeks)
+    const monthNamesFr = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    for (let week = 0; week < 18; week++) {
       baseSessions.forEach((s, idx) => {
         const d = new Date(2026, 7, 31 + week * 7 + dayOffsets[s.day]);
-        if (d.getMonth() === 8) {
+        if (d.getFullYear() === 2026 && d.getMonth() >= 8) {
           allOccurrences.push({
             ...s,
             date: d.getDate(),
+            month: monthNamesFr[d.getMonth()],
             week: week,
-            id: `sess-2026-09-${String(d.getDate()).padStart(2, '0')}-${idx}`,
+            id: `sess-2026-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}-${idx}`,
             waitlistCount: s.bookedSeats >= s.capacity ? 2 : 0
           });
         }
@@ -783,7 +785,7 @@
       gridEl.innerHTML = '';
       weekTitleEl.textContent = getWeekTitle(currentWeek);
       prevWeekBtn.disabled = currentWeek === 0;
-      nextWeekBtn.disabled = currentWeek === 4;
+      nextWeekBtn.disabled = currentWeek >= 17;
 
       if (filtered.length === 0) {
         noResultsEl.classList.remove('hidden');
@@ -800,7 +802,7 @@
           card.innerHTML = `
             <div>
               <div class="flex items-center justify-between text-xs mb-2">
-                <span class="font-black text-brand-red uppercase tracking-wider">${session.day} ${session.date} sept.</span>
+                <span class="font-black text-brand-red uppercase tracking-wider">${session.day} ${session.date} ${session.month || 'sept.'}</span>
                 <span class="font-extrabold text-neutral-800 bg-neutral-100 px-2.5 py-0.5 rounded-full">${session.time}</span>
               </div>
               <h4 class="text-base font-black text-brand-black group-hover:text-brand-red transition-colors">${session.activity}</h4>
@@ -1087,7 +1089,7 @@
     });
 
     nextWeekBtn.addEventListener('click', () => {
-      if (currentWeek < 4) {
+      if (currentWeek < 17) {
         currentWeek++;
         renderCalendar();
       }

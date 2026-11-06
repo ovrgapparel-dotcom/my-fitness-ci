@@ -29,7 +29,6 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   userBookedSessionIds,
   onSelectSession,
 }) => {
-  const [selectedMonth, setSelectedMonth] = useState<string>('Septembre');
   const [currentWeek, setCurrentWeek] = useState<number>(0);
   const [activityFilter, setActivityFilter] = useState<string>('all');
   const [studioFilter, setStudioFilter] = useState<string>('all');
@@ -46,33 +45,38 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
 
   const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
-  // Map month names to starting week offsets
-  const monthWeeks = useMemo(() => {
-    const map: Record<string, number[]> = {};
-    MONTH_NAMES.forEach((m) => (map[m] = []));
-
-    sessions.forEach((s) => {
-      if (map[s.month] && !map[s.month].includes(s.week)) {
-        map[s.month].push(s.week);
-      }
-    });
-
-    Object.keys(map).forEach((m) => map[m].sort((a, b) => a - b));
+  // Map each week to its dominant month
+  const weekMonth = useMemo(() => {
+    const map: Record<number, string> = {};
+    for (let w = 0; w < 18; w++) {
+      const startMonday = new Date(2026, 7, 31);
+      const midWeek = new Date(startMonday);
+      midWeek.setDate(startMonday.getDate() + w * 7 + 3); // Thursday of that week
+      const m = midWeek.toLocaleDateString('fr-FR', { month: 'long' });
+      map[w] = m.charAt(0).toUpperCase() + m.slice(1);
+    }
     return map;
-  }, [sessions]);
+  }, []);
 
-  const handleMonthChange = (month: string) => {
-    setSelectedMonth(month);
-    const availableWeeks = monthWeeks[month];
-    if (availableWeeks && availableWeeks.length > 0) {
-      setCurrentWeek(availableWeeks[0]);
+  // Jump to the first week of any chosen month
+  const jumpToMonth = (monthName: string) => {
+    const firstWeekForMonth: Record<string, number> = {
+      Septembre: 0,
+      Octobre: 4,
+      Novembre: 9,
+      Décembre: 13,
+    };
+    if (firstWeekForMonth[monthName] !== undefined) {
+      setCurrentWeek(firstWeekForMonth[monthName]);
     }
   };
 
+  const activeMonthName = weekMonth[currentWeek] || 'Septembre';
+
+  // Filter sessions by week, activity, studio, day, search
   const filteredSessions = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return sessions.filter((s) => {
-      const matchMonth = s.month === selectedMonth;
       const matchWeek = s.week === currentWeek;
       const matchAct = activityFilter === 'all' || s.activity === activityFilter;
       const matchStudio = studioFilter === 'all' || s.studio === studioFilter;
@@ -82,9 +86,9 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
         [s.activity, s.studio, s.coach].some((val) =>
           val.toLowerCase().includes(q)
         );
-      return matchMonth && matchWeek && matchAct && matchStudio && matchDay && matchQuery;
+      return matchWeek && matchAct && matchStudio && matchDay && matchQuery;
     });
-  }, [sessions, selectedMonth, currentWeek, activityFilter, studioFilter, dayFilter, searchQuery]);
+  }, [sessions, currentWeek, activityFilter, studioFilter, dayFilter, searchQuery]);
 
   const weekTitle = useMemo(() => {
     const startMonday = new Date(2026, 7, 31);
@@ -92,18 +96,21 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     start.setDate(startMonday.getDate() + currentWeek * 7);
 
     const end = new Date(start);
-    end.setDate(start.getDate() + 6);
+    end.setDate(start.getDate() + 5); // Saturday
+
+    // Don't go past Dec 31
+    if (end.getFullYear() > 2026) {
+      end.setFullYear(2026, 11, 31);
+    }
 
     const startMonth = start.toLocaleDateString('fr-FR', { month: 'long' });
     const endMonth = end.toLocaleDateString('fr-FR', { month: 'long' });
 
+    if (startMonth === endMonth) {
+      return `Semaine du ${start.getDate()} au ${end.getDate()} ${startMonth} 2026`;
+    }
     return `Semaine du ${start.getDate()} ${startMonth} au ${end.getDate()} ${endMonth} 2026`;
   }, [currentWeek]);
-
-  // Current month available weeks for pagination
-  const currentMonthWeeks = monthWeeks[selectedMonth] || [0];
-  const isFirstWeekInMonth = currentWeek === currentMonthWeeks[0];
-  const isLastWeekInMonth = currentWeek === currentMonthWeeks[currentMonthWeeks.length - 1];
 
   return (
     <section id="planning" className="py-16 bg-[#0a0a0c] border-y border-neutral-800">
@@ -114,13 +121,13 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 flex items-center gap-1.5 mb-2">
               <CheckCircle className="w-4 h-4" />
-              Planning Officiel Fin 2026 · Ivoire Trade Center
+              Planning Officiel Fin 2026 · Ivoire Trade Center Cocody
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
-              Calendrier des Séances · <span className="text-brand-red">Septembre à Décembre 2026</span>
+              Calendrier des Séances · <span className="text-brand-red">Jusqu'au 31 Décembre 2026</span>
             </h2>
             <p className="text-neutral-400 text-sm mt-1 max-w-xl">
-              Plus de 400 créneaux ouverts jusqu'au 31 décembre 2026. Sélectionnez un mois ci-dessous pour planifier vos entraînements.
+              18 semaines complètes de cours programmés (Septembre, Octobre, Novembre, Décembre 2026). Cliquez sur un mois ou utilisez les flèches pour naviguer d'une semaine à l'autre sans interruption.
             </p>
           </div>
 
@@ -129,46 +136,38 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               2026
             </div>
             <div className="text-xs">
-              <div className="font-bold text-neutral-200">Planning Complet 2026</div>
-              <div className="text-neutral-400">4 Mois · 18 Semaines · 25 Cours / Semaine</div>
+              <div className="font-bold text-neutral-200">18 Semaines Continues</div>
+              <div className="text-neutral-400">Semaine {currentWeek + 1} sur 18 · {activeMonthName} 2026</div>
             </div>
           </div>
         </div>
 
-        {/* MONTH SELECTOR TABS */}
+        {/* MONTH SELECTOR BUTTONS (JUMP TO MONTH) */}
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 border-b border-neutral-800">
-          <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider mr-2 hidden sm:inline flex items-center gap-1.5">
+          <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider mr-2 hidden sm:flex items-center gap-1.5">
             <CalendarIcon className="w-3.5 h-3.5 text-brand-gold" />
             Mois :
           </span>
           {MONTH_NAMES.map((month) => {
-            const isSelected = selectedMonth === month;
-            const countInMonth = sessions.filter((s) => s.month === month).length;
+            const isSelected = activeMonthName.toLowerCase().includes(month.toLowerCase().substring(0, 4));
 
             return (
               <button
                 key={month}
-                onClick={() => handleMonthChange(month)}
+                onClick={() => jumpToMonth(month)}
                 className={`px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2 whitespace-nowrap ${
                   isSelected
-                    ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30 border border-brand-red'
+                    ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30 border border-brand-red scale-105'
                     : 'bg-neutral-900 text-neutral-300 hover:text-white hover:bg-neutral-850 border border-neutral-800'
                 }`}
               >
                 <span>{month} 2026</span>
-                <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                    isSelected ? 'bg-black/30 text-white' : 'bg-neutral-800 text-neutral-400'
-                  }`}
-                >
-                  {countInMonth} cours
-                </span>
               </button>
             );
           })}
         </div>
 
-        {/* Filters */}
+        {/* Filters Bar */}
         <div className="bg-neutral-900/90 p-5 rounded-2xl border border-neutral-800 mb-8 shadow-xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -243,11 +242,11 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           </div>
         </div>
 
-        {/* Week Switcher */}
+        {/* CONTINUOUS WEEK NAVIGATION (WEEKS 0 TO 17 THROUGH END OF DECEMBER) */}
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-neutral-800">
           <button
             onClick={() => setCurrentWeek((w) => Math.max(0, w - 1))}
-            disabled={currentWeek === 0 || isFirstWeekInMonth}
+            disabled={currentWeek === 0}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -259,13 +258,13 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               {weekTitle}
             </h3>
             <p className="text-[11px] text-neutral-400 font-medium">
-              Mois actif : <strong className="text-brand-gold">{selectedMonth} 2026</strong>
+              Semaine <strong className="text-brand-gold">{currentWeek + 1}</strong> sur 18 · {activeMonthName} 2026
             </p>
           </div>
 
           <button
             onClick={() => setCurrentWeek((w) => Math.min(17, w + 1))}
-            disabled={currentWeek === 17 || isLastWeekInMonth}
+            disabled={currentWeek >= 17}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             Semaine suivante
@@ -369,7 +368,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
             <CalendarX className="w-12 h-12 text-neutral-500 mx-auto mb-3" />
             <h4 className="font-bold text-neutral-300 text-base">Aucun cours ne correspond à vos filtres</h4>
             <p className="text-xs text-neutral-500 mt-1">
-              Essayez de changer de semaine ou de réinitialiser vos filtres pour le mois de {selectedMonth}.
+              Essayez de réinitialiser vos filtres ou de naviguer vers une autre semaine.
             </p>
           </div>
         )}
