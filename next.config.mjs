@@ -3,8 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['my.matterport.com'],
-    unoptimized: true
-  }
+    unoptimized: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

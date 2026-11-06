@@ -94,13 +94,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header className="sticky top-0 z-40 bg-[#0a0a0c]/90 backdrop-blur-md border-b border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 p-1 shadow-sm flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl overflow-hidden bg-neutral-900/80 border border-neutral-800/80 p-1 shadow-md flex items-center justify-center group-hover:border-brand-red/50 transition-colors">
               <img
-                src="/assets/logo.jpg"
+                src="/assets/logo.png"
                 alt="MY FITNESS Logo"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter drop-shadow-[0_2px_10px_rgba(217,28,43,0.4)] group-hover:scale-105 transition-transform"
                 onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = 'https://via.placeholder.com/48?text=MF';
+                  (e.currentTarget as HTMLImageElement).src = '/assets/logo.jpg';
                 }}
               />
             </div>

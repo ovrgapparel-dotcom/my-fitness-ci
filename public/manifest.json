@@ -1,0 +1,23 @@
+{
+  "name": "MY FITNESS · Club Sport & Santé",
+  "short_name": "MY FITNESS",
+  "description": "Club d'entraînement haut de gamme à l'Ivoire Trade Center, Cocody, Abidjan. Studios Biking, Fonctionnel et Cours Collectifs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#d91c2b",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

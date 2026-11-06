@@ -18,11 +18,11 @@ export const Footer: React.FC = () => {
           {/* Col 1 */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white p-1">
+              <div className="w-11 h-11 rounded-xl bg-neutral-900 border border-neutral-800 p-1.5 flex items-center justify-center shadow-inner">
                 <img
-                  src="/assets/logo.jpg"
+                  src="/assets/logo.png"
                   alt="MY FITNESS Logo"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(217,28,43,0.35)]"
                 />
               </div>
               <span className="text-xl font-black tracking-tight">MY FITNESS</span>

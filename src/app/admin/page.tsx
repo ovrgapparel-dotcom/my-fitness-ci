@@ -233,8 +233,15 @@ export default function AdminDashboardPage() {
               <ArrowLeft className="w-3.5 h-3.5" />
               Retour au site
             </Link>
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-brand-gold" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 p-1 flex items-center justify-center">
+                <img
+                  src="/assets/logo.png"
+                  alt="MY FITNESS Emblem"
+                  className="w-full h-full object-contain filter drop-shadow-[0_1px_6px_rgba(217,28,43,0.4)]"
+                />
+              </div>
+              <Shield className="w-4 h-4 text-brand-gold" />
               <span className="font-black text-sm tracking-tight text-white uppercase">
                 MY FITNESS · Administration
               </span>
