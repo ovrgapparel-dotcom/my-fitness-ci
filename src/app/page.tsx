@@ -10,75 +10,12 @@ import { Footer } from '@/components/Footer';
 import { BookingModal } from '@/components/BookingModal';
 import { MyBookingsModal, UserBookingItem } from '@/components/MyBookingsModal';
 import { TrainingSession } from '@/lib/types';
+import { generateFullYear2026Sessions } from '@/lib/schedule-generator';
 import { Check, AlertCircle } from 'lucide-react';
-
-const baseSessions = [
-  { day: 'Lundi', time: '06h30', activity: 'Suspension T', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#16804f', capacity: 15, bookedSeats: 11, price: 10000 },
-  { day: 'Lundi', time: '09h30', activity: 'Pilates', studio: 'Cours Collectifs', coach: 'Kramo', color: '#e86b25', capacity: 25, bookedSeats: 25, price: 10000 },
-  { day: 'Lundi', time: '12h30', activity: 'Cross T.', studio: 'Studio Fonctionnel', coach: 'Soleil', color: '#e8b73e', capacity: 15, bookedSeats: 14, price: 12000 },
-  { day: 'Lundi', time: '17h30', activity: 'Suspension T', studio: 'Studio Fonctionnel', coach: 'Ismael', color: '#16804f', capacity: 15, bookedSeats: 8, price: 10000 },
-  { day: 'Lundi', time: '19h00', activity: 'Fight T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#872028', capacity: 12, bookedSeats: 10, price: 12000 }, // Custom limit 12
-
-  { day: 'Mardi', time: '06h30', activity: 'Yoga - Pilates', studio: 'Cours Collectifs', coach: 'Didier', color: '#e8b73e', capacity: 25, bookedSeats: 16, price: 10000 },
-  { day: 'Mardi', time: '12h30', activity: 'Biking', studio: 'Studio Biking', coach: 'Virtuel', color: '#16804f', capacity: 20, bookedSeats: 19, price: 10000 },
-  { day: 'Mardi', time: '18h00', activity: 'Cross T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#e8b73e', capacity: 15, bookedSeats: 15, price: 12000 }, // Full
-  { day: 'Mardi', time: '19h30', activity: 'Fight T.', studio: 'Studio Fonctionnel', coach: 'Virtuel', color: '#872028', capacity: 12, bookedSeats: 9, price: 12000 },
-
-  { day: 'Mercredi', time: '06h30', activity: 'Cross T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#e8b73e', capacity: 15, bookedSeats: 10, price: 12000 },
-  { day: 'Mercredi', time: '09h30', activity: 'Danse Classique', studio: 'Cours Collectifs', coach: 'Privé', color: '#872028', capacity: 20, bookedSeats: 14, price: 15000 },
-  { day: 'Mercredi', time: '18h00', activity: 'Suspension T', studio: 'Studio Fonctionnel', coach: 'Ismael', color: '#16804f', capacity: 15, bookedSeats: 7, price: 10000 },
-  { day: 'Mercredi', time: '19h30', activity: 'Kizomba', studio: 'Cours Collectifs', coach: 'Privé', color: '#872028', capacity: 25, bookedSeats: 18, price: 12000 },
-
-  { day: 'Jeudi', time: '06h30', activity: 'Stretching', studio: 'Cours Collectifs', coach: 'Didier', color: '#16804f', capacity: 25, bookedSeats: 12, price: 8000 },
-  { day: 'Jeudi', time: '12h30', activity: 'Cross T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#e8b73e', capacity: 15, bookedSeats: 13, price: 12000 },
-  { day: 'Jeudi', time: '18h00', activity: 'Body Sculpt', studio: 'Cours Collectifs', coach: 'Kante', color: '#2675a8', capacity: 25, bookedSeats: 20, price: 10000 },
-  { day: 'Jeudi', time: '19h30', activity: 'Fight T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#872028', capacity: 12, bookedSeats: 12, price: 12000 }, // Full
-
-  { day: 'Vendredi', time: '06h30', activity: 'HIIT T.', studio: 'Studio Fonctionnel', coach: 'Didier', color: '#2675a8', capacity: 15, bookedSeats: 11, price: 10000 },
-  { day: 'Vendredi', time: '09h30', activity: 'Yoga - Pilates', studio: 'Cours Collectifs', coach: 'Kramo', color: '#16804f', capacity: 25, bookedSeats: 15, price: 10000 },
-  { day: 'Vendredi', time: '12h30', activity: 'Biking', studio: 'Studio Biking', coach: 'Didier', color: '#16804f', capacity: 20, bookedSeats: 17, price: 10000 },
-  { day: 'Vendredi', time: '18h00', activity: 'Pilates', studio: 'Cours Collectifs', coach: 'Ismael', color: '#e86b25', capacity: 25, bookedSeats: 21, price: 10000 },
-  { day: 'Vendredi', time: '19h30', activity: 'Cross T.', studio: 'Studio Fonctionnel', coach: 'Kante', color: '#e8b73e', capacity: 15, bookedSeats: 14, price: 12000 },
-
-  { day: 'Samedi', time: '09h30', activity: 'Stretching - Danse', studio: 'Cours Collectifs', coach: 'Privé', color: '#872028', capacity: 20, bookedSeats: 18, price: 12000 },
-  { day: 'Samedi', time: '12h30', activity: 'Gymnastique', studio: 'Cours Collectifs', coach: 'Soleil', color: '#872028', capacity: 20, bookedSeats: 16, price: 10000 },
-  { day: 'Samedi', time: '18h00', activity: 'Fight T.', studio: 'Studio Fonctionnel', coach: 'Kramo', color: '#872028', capacity: 12, bookedSeats: 11, price: 12000 },
-];
-
-const dayOffsets: Record<string, number> = {
-  Lundi: 0,
-  Mardi: 1,
-  Mercredi: 2,
-  Jeudi: 3,
-  Vendredi: 4,
-  Samedi: 5,
-};
 
 export default function HomePage() {
   const [sessions, setSessions] = useState<TrainingSession[]>(() => {
-    const list: TrainingSession[] = [];
-    for (let week = 0; week < 5; week++) {
-      baseSessions.forEach((s, idx) => {
-        const d = new Date(2026, 7, 31 + week * 7 + dayOffsets[s.day]);
-        if (d.getMonth() === 8) {
-          list.push({
-            id: `sess-2026-09-${String(d.getDate()).padStart(2, '0')}-${idx}`,
-            day: s.day,
-            date: d.getDate(),
-            time: s.time,
-            activity: s.activity,
-            studio: s.studio,
-            coach: s.coach,
-            color: s.color,
-            capacity: s.capacity,
-            bookedSeats: s.bookedSeats,
-            priceXOF: s.price,
-            week,
-          });
-        }
-      });
-    }
-    return list;
+    return generateFullYear2026Sessions();
   });
 
   const [userCredits, setUserCredits] = useState<number>(1);

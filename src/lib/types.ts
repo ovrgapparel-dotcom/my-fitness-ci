@@ -59,6 +59,9 @@ export interface TrainingSession {
   id: string;
   day: string;
   date: number; // day of month
+  month: string; // 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  monthIndex: number; // 8 = Sept, 9 = Oct, 10 = Nov, 11 = Dec
+  year: number; // 2026
   time: string;
   activity: string;
   studio: string;
@@ -68,4 +71,7 @@ export interface TrainingSession {
   bookedSeats: number;
   priceXOF: number;
   week: number;
+  fullDateString?: string;
+  isCancelled?: boolean;
+  isCustomLimit?: boolean;
 }

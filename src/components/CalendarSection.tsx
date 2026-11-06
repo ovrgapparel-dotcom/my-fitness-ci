@@ -1,8 +1,22 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { CheckCircle, Search, ChevronLeft, ChevronRight, MapPin, User, Check, Clock, Ticket, CalendarX, Sparkles } from 'lucide-react';
+import {
+  CheckCircle,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  User,
+  Check,
+  Clock,
+  Ticket,
+  CalendarX,
+  Sparkles,
+  Calendar as CalendarIcon
+} from 'lucide-react';
 import { TrainingSession } from '@/lib/types';
+import { MONTH_NAMES } from '@/lib/schedule-generator';
 
 interface CalendarSectionProps {
   sessions: TrainingSession[];
@@ -15,6 +29,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   userBookedSessionIds,
   onSelectSession,
 }) => {
+  const [selectedMonth, setSelectedMonth] = useState<string>('Septembre');
   const [currentWeek, setCurrentWeek] = useState<number>(0);
   const [activityFilter, setActivityFilter] = useState<string>('all');
   const [studioFilter, setStudioFilter] = useState<string>('all');
@@ -31,9 +46,33 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
 
   const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
+  // Map month names to starting week offsets
+  const monthWeeks = useMemo(() => {
+    const map: Record<string, number[]> = {};
+    MONTH_NAMES.forEach((m) => (map[m] = []));
+
+    sessions.forEach((s) => {
+      if (map[s.month] && !map[s.month].includes(s.week)) {
+        map[s.month].push(s.week);
+      }
+    });
+
+    Object.keys(map).forEach((m) => map[m].sort((a, b) => a - b));
+    return map;
+  }, [sessions]);
+
+  const handleMonthChange = (month: string) => {
+    setSelectedMonth(month);
+    const availableWeeks = monthWeeks[month];
+    if (availableWeeks && availableWeeks.length > 0) {
+      setCurrentWeek(availableWeeks[0]);
+    }
+  };
+
   const filteredSessions = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return sessions.filter((s) => {
+      const matchMonth = s.month === selectedMonth;
       const matchWeek = s.week === currentWeek;
       const matchAct = activityFilter === 'all' || s.activity === activityFilter;
       const matchStudio = studioFilter === 'all' || s.studio === studioFilter;
@@ -43,48 +82,90 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
         [s.activity, s.studio, s.coach].some((val) =>
           val.toLowerCase().includes(q)
         );
-      return matchWeek && matchAct && matchStudio && matchDay && matchQuery;
+      return matchMonth && matchWeek && matchAct && matchStudio && matchDay && matchQuery;
     });
-  }, [sessions, currentWeek, activityFilter, studioFilter, dayFilter, searchQuery]);
+  }, [sessions, selectedMonth, currentWeek, activityFilter, studioFilter, dayFilter, searchQuery]);
 
   const weekTitle = useMemo(() => {
-    const start = new Date(2026, 7, 31 + currentWeek * 7);
-    const end = new Date(2026, 7, 31 + currentWeek * 7 + 6);
-    return `Semaine du ${start.getDate()} ${start.toLocaleDateString('fr-FR', {
-      month: 'long',
-    })} au ${end.getDate()} ${end.toLocaleDateString('fr-FR', {
-      month: 'long',
-    })} 2026`;
+    const startMonday = new Date(2026, 7, 31);
+    const start = new Date(startMonday);
+    start.setDate(startMonday.getDate() + currentWeek * 7);
+
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+
+    const startMonth = start.toLocaleDateString('fr-FR', { month: 'long' });
+    const endMonth = end.toLocaleDateString('fr-FR', { month: 'long' });
+
+    return `Semaine du ${start.getDate()} ${startMonth} au ${end.getDate()} ${endMonth} 2026`;
   }, [currentWeek]);
+
+  // Current month available weeks for pagination
+  const currentMonthWeeks = monthWeeks[selectedMonth] || [0];
+  const isFirstWeekInMonth = currentWeek === currentMonthWeeks[0];
+  const isLastWeekInMonth = currentWeek === currentMonthWeeks[currentMonthWeeks.length - 1];
 
   return (
     <section id="planning" className="py-16 bg-[#0a0a0c] border-y border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 flex items-center gap-1.5 mb-2">
               <CheckCircle className="w-4 h-4" />
-              Places & Réservations en Temps Réel
+              Planning Officiel Fin 2026 · Ivoire Trade Center
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
-              Planning des Cours · <span className="text-brand-red">Septembre 2026</span>
+              Calendrier des Séances · <span className="text-brand-red">Septembre à Décembre 2026</span>
             </h2>
             <p className="text-neutral-400 text-sm mt-1 max-w-xl">
-              Consultez les 25 créneaux hebdomadaires. Règle d'annulation 12h avec restitution en crédit de séance et liste d'attente automatique (délai 1h).
+              Plus de 400 créneaux ouverts jusqu'au 31 décembre 2026. Sélectionnez un mois ci-dessous pour planifier vos entraînements.
             </p>
           </div>
 
           <div className="flex items-center gap-3 bg-neutral-900 border border-neutral-800 px-4 py-3 rounded-2xl">
             <div className="w-10 h-10 rounded-xl bg-brand-red/20 text-brand-red border border-brand-red/30 flex items-center justify-center font-black">
-              MF
+              2026
             </div>
             <div className="text-xs">
-              <div className="font-bold text-neutral-200">25 créneaux / semaine</div>
-              <div className="text-neutral-400">Studios : Fonctionnel · Collectifs · Biking</div>
+              <div className="font-bold text-neutral-200">Planning Complet 2026</div>
+              <div className="text-neutral-400">4 Mois · 18 Semaines · 25 Cours / Semaine</div>
             </div>
           </div>
+        </div>
+
+        {/* MONTH SELECTOR TABS */}
+        <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 border-b border-neutral-800">
+          <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider mr-2 hidden sm:inline flex items-center gap-1.5">
+            <CalendarIcon className="w-3.5 h-3.5 text-brand-gold" />
+            Mois :
+          </span>
+          {MONTH_NAMES.map((month) => {
+            const isSelected = selectedMonth === month;
+            const countInMonth = sessions.filter((s) => s.month === month).length;
+
+            return (
+              <button
+                key={month}
+                onClick={() => handleMonthChange(month)}
+                className={`px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2 whitespace-nowrap ${
+                  isSelected
+                    ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30 border border-brand-red'
+                    : 'bg-neutral-900 text-neutral-300 hover:text-white hover:bg-neutral-850 border border-neutral-800'
+                }`}
+              >
+                <span>{month} 2026</span>
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                    isSelected ? 'bg-black/30 text-white' : 'bg-neutral-800 text-neutral-400'
+                  }`}
+                >
+                  {countInMonth} cours
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Filters */}
@@ -166,8 +247,8 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-neutral-800">
           <button
             onClick={() => setCurrentWeek((w) => Math.max(0, w - 1))}
-            disabled={currentWeek === 0}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            disabled={currentWeek === 0 || isFirstWeekInMonth}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
             Semaine précédente
@@ -177,13 +258,15 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
             <h3 className="text-base sm:text-lg font-black text-white uppercase tracking-wide">
               {weekTitle}
             </h3>
-            <p className="text-[11px] text-neutral-400 font-medium">Créneaux ouverts à la réservation</p>
+            <p className="text-[11px] text-neutral-400 font-medium">
+              Mois actif : <strong className="text-brand-gold">{selectedMonth} 2026</strong>
+            </p>
           </div>
 
           <button
-            onClick={() => setCurrentWeek((w) => Math.min(4, w + 1))}
-            disabled={currentWeek === 4}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            onClick={() => setCurrentWeek((w) => Math.min(17, w + 1))}
+            disabled={currentWeek === 17 || isLastWeekInMonth}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-extrabold text-neutral-200 hover:border-brand-red hover:text-brand-red disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             Semaine suivante
             <ChevronRight className="w-4 h-4" />
@@ -195,7 +278,6 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
           {filteredSessions.map((session) => {
             const isFull = session.bookedSeats >= session.capacity;
             const isUserBooked = userBookedSessionIds.has(session.id);
-            const isCustomLimit = session.capacity === 12; // Example of custom limit for Fight Training
 
             return (
               <article
@@ -206,7 +288,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                 <div>
                   <div className="flex items-center justify-between text-xs mb-2">
                     <span className="font-black text-brand-gold uppercase tracking-wider">
-                      {session.day} {session.date} sept.
+                      {session.day} {session.date} {session.month.toLowerCase()}
                     </span>
                     <span className="font-extrabold text-neutral-200 bg-neutral-800 px-2.5 py-0.5 rounded-full border border-neutral-700">
                       {session.time}
@@ -217,10 +299,10 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
                     <h4 className="text-base font-black text-white group-hover:text-brand-red transition-colors">
                       {session.activity}
                     </h4>
-                    {isCustomLimit && (
+                    {session.isCustomLimit && (
                       <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider bg-brand-red/20 text-red-300 border border-brand-red/40 px-2 py-0.5 rounded-full">
                         <Sparkles className="w-2.5 h-2.5" />
-                        Capacité Custom
+                        Custom
                       </span>
                     )}
                   </div>
@@ -287,7 +369,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
             <CalendarX className="w-12 h-12 text-neutral-500 mx-auto mb-3" />
             <h4 className="font-bold text-neutral-300 text-base">Aucun cours ne correspond à vos filtres</h4>
             <p className="text-xs text-neutral-500 mt-1">
-              Essayez d'élargir vos critères de recherche ou sélectionnez un autre jour.
+              Essayez de changer de semaine ou de réinitialiser vos filtres pour le mois de {selectedMonth}.
             </p>
           </div>
         )}
