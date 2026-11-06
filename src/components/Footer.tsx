@@ -1,9 +1,16 @@
 'use client';
 
 import React from 'react';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Lock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const Footer: React.FC = () => {
+  const router = useRouter();
+
+  const handleAdminDoubleClick = () => {
+    router.push('/admin');
+  };
+
   return (
     <footer id="contact" className="bg-brand-dark text-white pt-14 pb-8 border-t-4 border-brand-red">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,8 +82,18 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 gap-3">
-          <p>© 2026 MY FITNESS. Tous droits réservés.</p>
-          <p>Règle d'annulation : 12 heures avant chaque séance (remboursement en crédit de séance).</p>
+          <div className="flex items-center gap-2">
+            <p>© 2026 MY FITNESS. Tous droits réservés.</p>
+            <button
+              onDoubleClick={handleAdminDoubleClick}
+              className="text-white/20 hover:text-white/60 transition-colors p-1"
+              title="Accès Admin (Double-clic)"
+              aria-label="Accès Admin"
+            >
+              <Lock className="w-3 h-3" />
+            </button>
+          </div>
+          <p>Règle d'annulation : 12 heures avant chaque séance (restitution en crédit).</p>
         </div>
       </div>
     </footer>

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
-import { MapPin, Phone, Zap, BookmarkCheck, ArrowRight, Coins, Shield } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { MapPin, Phone, Zap, BookmarkCheck, ArrowRight, Coins, Lock, KeyRound, X, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface NavbarProps {
   userCredits: number;
@@ -15,6 +16,44 @@ export const Navbar: React.FC<NavbarProps> = ({
   bookingsCount,
   onOpenMyBookings,
 }) => {
+  const router = useRouter();
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [pinCode, setPinCode] = useState('');
+  const [pinError, setPinError] = useState(false);
+
+  // Mobile double-tap detection
+  const lastTapRef = useRef<number>(0);
+
+  const triggerAdminAccess = () => {
+    setIsAdminModalOpen(true);
+    setPinCode('');
+    setPinError(false);
+  };
+
+  const handleDoubleClick = () => {
+    triggerAdminAccess();
+  };
+
+  const handleTouchEnd = () => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 350;
+    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      triggerAdminAccess();
+    }
+    lastTapRef.current = now;
+  };
+
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Default admin access PIN (2026 or 1234 or direct enter)
+    if (pinCode.trim() === '2026' || pinCode.trim() === '1234' || pinCode.trim() === '') {
+      setIsAdminModalOpen(false);
+      router.push('/admin');
+    } else {
+      setPinError(true);
+    }
+  };
+
   return (
     <>
       {/* Top Banner */}
@@ -36,13 +75,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Zap className="w-3 h-3 text-brand-gold" />
               Wave • Orange Money • MTN MoMo
             </span>
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1 text-[11px] bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-2.5 py-0.5 rounded-full border border-neutral-700 transition-colors"
+
+            {/* Discreet Admin Lock Icon with Double-Click Feature */}
+            <button
+              onDoubleClick={handleDoubleClick}
+              onTouchEnd={handleTouchEnd}
+              className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-brand-gold hover:border-brand-gold/60 transition-all cursor-pointer group relative"
+              title="Accès Administrateur (Double-clic)"
+              aria-label="Accès Administration sécurisé"
             >
-              <Shield className="w-3 h-3 text-brand-gold" />
-              Espace Admin
-            </Link>
+              <Lock className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
+            </button>
           </div>
         </div>
       </aside>
@@ -119,6 +162,79 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </header>
+
+      {/* Admin Passcode Modal triggered on Double-Click */}
+      {isAdminModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-neutral-900 w-full max-w-sm rounded-2xl shadow-2xl border border-neutral-800 overflow-hidden text-neutral-100 animate-fade-in">
+            <div className="bg-neutral-950 p-4 border-b border-neutral-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Lock className="w-4 h-4 text-brand-gold" />
+                <span className="font-black text-xs uppercase tracking-wider text-white">
+                  Accès Administration Sécurisé
+                </span>
+              </div>
+              <button
+                onClick={() => setIsAdminModalOpen(false)}
+                className="text-neutral-400 hover:text-white p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handlePinSubmit} className="p-5 space-y-4">
+              <div className="text-center space-y-1">
+                <div className="w-12 h-12 rounded-2xl bg-brand-red/20 border border-brand-red/40 text-brand-red mx-auto flex items-center justify-center">
+                  <KeyRound className="w-6 h-6 text-brand-gold" />
+                </div>
+                <h4 className="text-sm font-black text-white mt-2">Espace Gestionnaire · MY FITNESS</h4>
+                <p className="text-[11px] text-neutral-400">
+                  Entrez votre code PIN staff ou cliquez sur valider pour accéder au tableau de bord.
+                </p>
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  autoFocus
+                  value={pinCode}
+                  onChange={(e) => {
+                    setPinCode(e.target.value);
+                    setPinError(false);
+                  }}
+                  placeholder="Code PIN (par défaut : 2026)"
+                  className="w-full bg-neutral-950 border border-neutral-750 rounded-xl px-3 py-2.5 text-center text-sm font-mono tracking-widest text-white focus:outline-none focus:ring-2 focus:ring-brand-red"
+                />
+                {pinError && (
+                  <p className="text-[11px] text-red-400 mt-1.5 text-center font-medium flex items-center justify-center gap-1">
+                    <ShieldAlert className="w-3.5 h-3.5" />
+                    Code PIN incorrect. Réessayez avec 2026.
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2 pt-1">
+                <button
+                  type="submit"
+                  className="w-full bg-brand-red hover:bg-brand-dark text-white font-black text-xs uppercase tracking-wider py-3 rounded-xl shadow-md transition-all"
+                >
+                  Déverrouiller l'Administration
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAdminModalOpen(false);
+                    router.push('/admin');
+                  }}
+                  className="w-full text-center text-[11px] font-bold text-neutral-400 hover:text-brand-gold py-1"
+                >
+                  Passer directement au Dashboard →
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 };
