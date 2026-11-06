@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-jakarta);
+  background-color: #0a0a0c;
+  color: #f3f3f3;
+}
+
+.matterport-container {
+  position: relative;
+  width: 100%;
+  height: 72vh;
+  min-height: 520px;
+  max-height: 820px;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 768px) {
+  .matterport-container {
+    height: 50vh;
+    min-height: 380px;
+  }
+}

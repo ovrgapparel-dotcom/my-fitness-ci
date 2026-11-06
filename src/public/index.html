@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MY FITNESS · Club Sport & Santé · Ivoire Trade Center</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#8b1e26',
+              dark: '#60171e',
+              black: '#1a1616',
+              gold: '#e8b73e',
+              cream: '#faf5eb',
+              gray: '#f6f3ef',
+              border: '#e4ded7',
+              green: '#16804f'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .matterport-container {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 768px) {
+      .matterport-container {
+        height: 380px;
+      }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #8b1e26;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="bg-[#faf9f6] text-brand-black antialiased">
+
+  <!-- TOP BAR -->
+  <aside class="bg-brand-dark text-white text-xs py-2 px-4 border-b border-brand-red/30">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 font-medium">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-gold"></i>
+          Ivoire Trade Center (ITC), Cocody, Abidjan
+        </span>
+        <span class="hidden sm:inline text-white/30">•</span>
+        <span class="hidden sm:inline-flex items-center gap-1.5">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-brand-gold"></i>
+          +225 07 04 87 76 57
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-white/90">
+        <span class="inline-flex items-center gap-1 text-[11px] bg-brand-red/60 px-2 py-0.5 rounded-full border border-brand-gold/30">
+          <i data-lucide="zap" class="w-3 h-3 text-brand-gold"></i>
+          Paiements Wave • Orange Money • MTN MoMo
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-xl overflow-hidden bg-brand-cream border border-brand-border p-1 shadow-sm flex items-center justify-center">
+          <img src="../../assets/logo.jpg" alt="MY FITNESS Logo" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/48?text=MF'"/>
+        </div>
+        <div>
+          <span class="text-2xl font-black tracking-tight text-brand-red group-hover:text-brand-dark transition-colors">MY FITNESS</span>
+          <p class="text-[11px] font-semibold text-neutral-500 uppercase tracking-widest -mt-1">Club Sport & Santé</p>
+        </div>
+      </a>
+
+      <!-- Navigation links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-neutral-700">
+        <a href="#hero-tour" class="hover:text-brand-red transition-colors flex items-center gap-1.5">
+          <i data-lucide="box" class="w-4 h-4 text-brand-red"></i>
+          Visite 3D
+        </a>
+        <a href="#planning" class="hover:text-brand-red transition-colors flex items-center gap-1.5">
+          <i data-lucide="calendar" class="w-4 h-4 text-brand-red"></i>
+          Planning des Cours
+        </a>
+        <a href="#tarifs" class="hover:text-brand-red transition-colors flex items-center gap-1.5">
+          <i data-lucide="credit-card" class="w-4 h-4 text-brand-red"></i>
+          Abonnements & Séances
+        </a>
+        <a href="#contact" class="hover:text-brand-red transition-colors flex items-center gap-1.5">
+          <i data-lucide="map" class="w-4 h-4 text-brand-red"></i>
+          Contact
+        </a>
+      </nav>
+
+      <!-- User simulation badge & action -->
+      <div class="flex items-center gap-3">
+        <!-- Session Credit Balance Pill -->
+        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-cream border border-brand-border text-xs font-bold text-neutral-800">
+          <i data-lucide="coins" class="w-4 h-4 text-brand-gold"></i>
+          <span>Crédits : <span id="userCreditsDisplay" class="text-brand-red font-black">1</span></span>
+        </div>
+
+        <button onclick="toggleMyBookingsModal()" class="relative p-2.5 rounded-xl border border-brand-border bg-white text-brand-black hover:border-brand-red transition-all" title="Mes Réservations">
+          <i data-lucide="bookmark-check" class="w-5 h-5 text-brand-red"></i>
+          <span id="bookingCountBadge" class="absolute -top-1.5 -right-1.5 bg-brand-red text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">1</span>
+        </button>
+        <a href="#planning" class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-dark text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all">
+          <span>Réserver un cours</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION WITH EMBEDDED MATTERPORT 3D TOUR -->
+  <section id="hero-tour" class="relative pt-8 pb-16 overflow-hidden bg-gradient-to-b from-brand-cream/60 via-white to-brand-gray/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Headings & Value proposition -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-10">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 border border-brand-green/20 text-brand-green text-xs font-bold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span>
+            Plateau Fitness Haut de Gamme · Ivoire Trade Center
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-brand-black tracking-tight leading-[1.08] uppercase">
+            L'excellence du sport <span class="text-brand-red underline decoration-brand-gold decoration-4 underline-offset-8">en immersion</span>
+          </h1>
+
+          <p class="text-neutral-600 text-base sm:text-lg max-w-2xl leading-relaxed">
+            Découvrez nos 3 studios d'entraînement (Fonctionnel, Cours Collectifs, Biking) et réservez vos séances en quelques clics. Accédez directement à la visite interactive 3D ci-dessous ou scannez le QR code sur votre mobile.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#planning" class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-dark text-white px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-lg hover:shadow-xl transition-all">
+              <i data-lucide="calendar" class="w-4 h-4 text-brand-gold"></i>
+              Voir le planning de la semaine
+            </a>
+            <button onclick="scrollToTour()" class="inline-flex items-center gap-2 bg-white hover:bg-neutral-50 text-brand-black border border-brand-border px-5 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all">
+              <i data-lucide="play-circle" class="w-4 h-4 text-brand-red"></i>
+              Démarrer la visite 3D
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Access QR Card for Mobile 3D Immersion -->
+        <div class="lg:col-span-5">
+          <div class="bg-white rounded-2xl border border-brand-border p-6 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-brand-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-black tracking-wider uppercase text-brand-red flex items-center gap-1.5">
+                <i data-lucide="smartphone" class="w-4 h-4"></i>
+                Expérience Mobile 3D
+              </span>
+              <span class="text-[10px] font-bold bg-brand-gold/20 text-brand-dark px-2 py-0.5 rounded-md">AR / VR Ready</span>
+            </div>
+
+            <div class="flex items-center gap-5">
+              <div class="w-32 h-32 p-2 bg-white rounded-xl border-2 border-brand-red/30 shadow-inner shrink-0 flex items-center justify-center">
+                <img src="../../assets/qr-code.png" alt="QR Code Visite 3D" class="w-full h-full object-contain" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://my.matterport.com/show/?m=QLt2w88DUC7'"/>
+              </div>
+              <div class="space-y-2">
+                <h2 class="font-extrabold text-sm text-brand-black">Scannez pour visiter sur smartphone</h2>
+                <p class="text-xs text-neutral-500 leading-relaxed">
+                  Pointez l'appareil photo de votre smartphone pour naviguer dans la salle en réalité virtuelle.
+                </p>
+                <a href="https://my.matterport.com/show/?m=QLt2w88DUC7" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-red hover:text-brand-dark">
+                  Ouvrir en plein écran
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMBEDDED MATTERPORT 3D IFRAME CONTAINER -->
+      <div class="bg-white p-3 rounded-2xl border border-brand-border shadow-2xl">
+        <div class="flex items-center justify-between px-4 py-2.5 bg-neutral-900 text-white rounded-xl mb-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-bold tracking-wide uppercase">Visite Virtuelle 3D Interactive · MY FITNESS</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-neutral-400 hidden sm:inline">Modèle Matterport officiel</span>
+            <button onclick="toggleFullscreenMatterport()" class="hover:text-brand-gold flex items-center gap-1 font-semibold">
+              <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+              Agrandir
+            </button>
+          </div>
+        </div>
+
+        <div id="matterportWrapper" class="matterport-container bg-neutral-950">
+          <iframe
+            id="matterportFrame"
+            src="https://my.matterport.com/show/?m=QLt2w88DUC7"
+            class="w-full h-full border-0"
+            allowfullscreen
+            allow="fullscreen; vr; xr; accelerometer; gyroscope"
+            title="MY FITNESS Virtual Tour"
+          ></iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LIVE CALENDAR & BOOKING ENGINE -->
+  <section id="planning" class="py-16 bg-white border-y border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-brand-green flex items-center gap-1.5 mb-2">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            Gestion des Places en Temps Réel
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-black text-brand-black uppercase tracking-tight">
+            Planning des Cours · <span class="text-brand-red">Septembre 2026</span>
+          </h2>
+          <p class="text-neutral-500 text-sm mt-1 max-w-xl">
+            Cliquez sur un cours pour réserver votre place. Les réservations sont décomptées en direct avec gestion automatique de la liste d'attente et règle d'annulation 12h.
+          </p>
+        </div>
+
+        <!-- System Stats Pill -->
+        <div class="flex items-center gap-3 bg-brand-cream border border-brand-border px-4 py-3 rounded-2xl">
+          <div class="w-10 h-10 rounded-xl bg-brand-red/10 text-brand-red flex items-center justify-center font-black">
+            MF
+          </div>
+          <div class="text-xs">
+            <div class="font-bold text-neutral-800">25 créneaux hebdomadaires</div>
+            <div class="text-neutral-500">Studios : Fonctionnel · Collectifs · Biking</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTERS BAR -->
+      <div class="bg-brand-gray p-5 rounded-2xl border border-brand-border mb-8 shadow-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Activity Filter -->
+          <div>
+            <label for="activityFilter" class="block text-xs font-extrabold uppercase tracking-wider text-neutral-700 mb-1.5">Activité</label>
+            <select id="activityFilter" class="w-full bg-white border border-brand-border rounded-xl px-3 py-2.5 text-xs font-semibold text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+              <option value="all">Toutes les activités (13)</option>
+            </select>
+          </div>
+
+          <!-- Studio Filter -->
+          <div>
+            <label for="studioFilter" class="block text-xs font-extrabold uppercase tracking-wider text-neutral-700 mb-1.5">Studio</label>
+            <select id="studioFilter" class="w-full bg-white border border-brand-border rounded-xl px-3 py-2.5 text-xs font-semibold text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+              <option value="all">Tous les studios (3)</option>
+            </select>
+          </div>
+
+          <!-- Day Filter -->
+          <div>
+            <label for="dayFilter" class="block text-xs font-extrabold uppercase tracking-wider text-neutral-700 mb-1.5">Jour de la semaine</label>
+            <select id="dayFilter" class="w-full bg-white border border-brand-border rounded-xl px-3 py-2.5 text-xs font-semibold text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+              <option value="all">Tous les jours (Lun - Sam)</option>
+            </select>
+          </div>
+
+          <!-- Search Filter -->
+          <div>
+            <label for="searchFilter" class="block text-xs font-extrabold uppercase tracking-wider text-neutral-700 mb-1.5">Rechercher</label>
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-neutral-400 absolute left-3 top-3"></i>
+              <input id="searchFilter" type="search" placeholder="Coach, Pilates, Biking..." class="w-full bg-white border border-brand-border rounded-xl pl-9 pr-3 py-2 text-xs font-medium text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-red" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEEK NAVIGATION BAR -->
+      <div class="flex items-center justify-between mb-8 pb-4 border-b border-brand-border">
+        <button id="prevWeekBtn" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-border bg-white text-xs font-extrabold text-neutral-700 hover:border-brand-red hover:text-brand-red disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          Semaine précédente
+        </button>
+
+        <div class="text-center">
+          <h3 id="currentWeekTitle" class="text-base sm:text-lg font-black text-brand-red uppercase tracking-wide">
+            Semaine du 31 août au 6 septembre 2026
+          </h3>
+          <p class="text-[11px] text-neutral-500 font-medium">Créneaux ouverts à la réservation</p>
+        </div>
+
+        <button id="nextWeekBtn" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-border bg-white text-xs font-extrabold text-neutral-700 hover:border-brand-red hover:text-brand-red disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+          Semaine suivante
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- SESSIONS GRID -->
+      <div id="calendarGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="noResultsNotice" class="hidden text-center py-16 bg-brand-cream/50 rounded-2xl border border-dashed border-brand-border">
+        <i data-lucide="calendar-x" class="w-12 h-12 text-neutral-400 mx-auto mb-3"></i>
+        <h4 class="font-bold text-neutral-700 text-base">Aucun cours ne correspond à vos filtres</h4>
+        <p class="text-xs text-neutral-500 mt-1">Essayez d'élargir vos critères de recherche ou sélectionnez un autre studio.</p>
+        <button onclick="resetFilters()" class="mt-4 px-4 py-2 rounded-xl bg-brand-red text-white text-xs font-bold">Réinitialiser les filtres</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP & RATES SECTION -->
+  <section id="tarifs" class="py-16 bg-brand-gray border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-brand-red">Formules Flexibles</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-brand-black uppercase tracking-tight mt-1">
+          Abonnements & Séances à la carte
+        </h2>
+        <p class="text-neutral-600 text-sm mt-2">
+          Réglez en toute sécurité via Mobile Money (Wave, Orange Money, MTN MoMo). Tous nos tarifs sont en FCFA (XOF).
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1: Séance Unique -->
+        <div class="bg-white rounded-2xl border border-brand-border p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-black uppercase tracking-wider text-neutral-500 mb-2">Accès Libre</div>
+            <h3 class="text-xl font-black text-brand-black">Séance à l'Unité</h3>
+            <p class="text-xs text-neutral-500 mt-1">Idéal pour découvrir nos studios ou s'entraîner ponctuellement.</p>
+            <div class="mt-6 mb-6">
+              <span class="text-3xl font-black text-brand-black">10 000</span>
+              <span class="text-xs font-extrabold text-neutral-500 uppercase ml-1">FCFA / séance</span>
+            </div>
+            <ul class="space-y-3 text-xs text-neutral-600 border-t border-brand-border pt-6">
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Accès au cours sélectionné
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Paiement instantané Wave / OM / MTN
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Annulation sans frais jusqu'à 12h avant
+              </li>
+            </ul>
+          </div>
+          <button onclick="openBookingFromPlan('Séance Unique')" class="mt-8 w-full py-3 rounded-xl border-2 border-brand-red text-brand-red font-black text-xs uppercase tracking-wider hover:bg-brand-red hover:text-white transition-all">
+            Choisir un cours
+          </button>
+        </div>
+
+        <!-- Card 2: Pass Mensuel (Featured) -->
+        <div class="bg-white rounded-2xl border-2 border-brand-red p-7 shadow-xl relative flex flex-col justify-between">
+          <div class="absolute -top-3.5 right-6 bg-brand-red text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+            Plus Populaire
+          </div>
+          <div>
+            <div class="text-xs font-black uppercase tracking-wider text-brand-red mb-2">Abonnement Mensuel</div>
+            <h3 class="text-xl font-black text-brand-black">Pass Mensuel Essentiel</h3>
+            <p class="text-xs text-neutral-500 mt-1">Accès complet à tous les cours collectifs et functional training.</p>
+            <div class="mt-6 mb-6">
+              <span class="text-3xl font-black text-brand-red">45 000</span>
+              <span class="text-xs font-extrabold text-neutral-500 uppercase ml-1">FCFA / mois</span>
+            </div>
+            <ul class="space-y-3 text-xs text-neutral-600 border-t border-brand-border pt-6">
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Accès illimité aux 3 studios
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Jusqu'à 3 réservations simultanées
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Priorité sur les listes d'attente
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Renouvellement automatique Mobile Money
+              </li>
+            </ul>
+          </div>
+          <button onclick="openBookingFromPlan('Pass Mensuel Essentiel')" class="mt-8 w-full py-3 rounded-xl bg-brand-red text-white font-black text-xs uppercase tracking-wider hover:bg-brand-dark shadow-md transition-all">
+            Souscrire au Pass Mensuel
+          </button>
+        </div>
+
+        <!-- Card 3: VIP Annuel -->
+        <div class="bg-white rounded-2xl border border-brand-border p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-black uppercase tracking-wider text-brand-gold mb-2">Prestige & Performance</div>
+            <h3 class="text-xl font-black text-brand-black">Pass Annuel VIP</h3>
+            <p class="text-xs text-neutral-500 mt-1">L'engagement total pour transformer votre condition physique.</p>
+            <div class="mt-6 mb-6">
+              <span class="text-3xl font-black text-brand-black">550 000</span>
+              <span class="text-xs font-extrabold text-neutral-500 uppercase ml-1">FCFA / an</span>
+            </div>
+            <ul class="space-y-3 text-xs text-neutral-600 border-t border-brand-border pt-6">
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Accès illimité 365 jours
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                3 sessions de Personal Coaching incluses
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="check" class="w-4 h-4 text-brand-green shrink-0"></i>
+                Casier réservé & kit athlète MY FITNESS
+              </li>
+            </ul>
+          </div>
+          <button onclick="openBookingFromPlan('Pass Annuel VIP')" class="mt-8 w-full py-3 rounded-xl border-2 border-brand-black text-brand-black font-black text-xs uppercase tracking-wider hover:bg-brand-black hover:text-white transition-all">
+            Souscrire au VIP
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER & CONTACT -->
+  <footer id="contact" class="bg-brand-dark text-white pt-14 pb-8 border-t-4 border-brand-red">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+        <!-- Col 1: Brand -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white p-1">
+              <img src="../../assets/logo.jpg" alt="MY FITNESS" class="w-full h-full object-contain"/>
+            </div>
+            <span class="text-xl font-black tracking-tight">MY FITNESS</span>
+          </div>
+          <p class="text-xs text-white/70 leading-relaxed">
+            Votre club d'entraînement fonctionnel, cyclisme en salle et cours collectifs à l'Ivoire Trade Center de Cocody.
+          </p>
+        </div>
+
+        <!-- Col 2: Horaires -->
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-brand-gold mb-3">Horaires des Studios</h4>
+          <ul class="text-xs text-white/80 space-y-2">
+            <li>Lundi – Vendredi : 06h00 – 21h30</li>
+            <li>Samedi : 08h30 – 19h30</li>
+            <li>Dimanche : Fermé (Maintenance)</li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Coordonnées -->
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-brand-gold mb-3">Localisation & Contact</h4>
+          <ul class="text-xs text-white/80 space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-brand-gold shrink-0 mt-0.5"></i>
+              <span>Ivoire Trade Center, ITC Cocody, Galerie Commerciale, Abidjan</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-brand-gold shrink-0"></i>
+              <span>+225 07 04 87 76 57</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4 text-brand-gold shrink-0"></i>
+              <span>contact@myfitness.ci</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Paiements Mobiles -->
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-brand-gold mb-3">Paiements Acceptés</h4>
+          <p class="text-xs text-white/70 mb-3">Transactions instantanées et sécurisées en FCFA (XOF) :</p>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-white/10 rounded-lg text-[11px] font-bold">Wave</span>
+            <span class="px-2.5 py-1 bg-white/10 rounded-lg text-[11px] font-bold">Orange Money</span>
+            <span class="px-2.5 py-1 bg-white/10 rounded-lg text-[11px] font-bold">MTN MoMo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 gap-3">
+        <p>© 2026 MY FITNESS. Tous droits réservés.</p>
+        <p>Règle d'annulation : 12 heures avant chaque séance.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOOKING / WAITLIST MODAL -->
+  <div id="bookingModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-brand-border overflow-hidden">
+      <!-- Modal Header -->
+      <div class="bg-brand-red text-white p-5 flex items-center justify-between">
+        <div>
+          <span id="modalModeTag" class="text-[10px] font-black uppercase tracking-widest bg-brand-gold text-brand-dark px-2 py-0.5 rounded">Réservation</span>
+          <h3 id="modalSessionTitle" class="text-lg font-black mt-1">Cross T. · Studio Fonctionnel</h3>
+        </div>
+        <button onclick="closeBookingModal()" class="text-white/80 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4">
+        <!-- Session details summary -->
+        <div class="bg-brand-gray p-3.5 rounded-xl border border-brand-border text-xs flex justify-between items-center">
+          <div>
+            <div id="modalDateTime" class="font-extrabold text-neutral-800">Lundi 31 août à 12h30</div>
+            <div id="modalCoachStudio" class="text-neutral-500">Coach : Soleil · Studio Fonctionnel</div>
+          </div>
+          <div class="text-right">
+            <div id="modalCapacityDisplay" class="font-black text-brand-red">14 / 15 places</div>
+            <div id="modalPriceDisplay" class="text-neutral-500">10 000 FCFA</div>
+          </div>
+        </div>
+
+        <!-- Waitlist Notice if Full -->
+        <div id="modalWaitlistNotice" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs">
+          <strong class="font-bold flex items-center gap-1.5 text-amber-900">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i> Séance Complète !
+          </strong>
+          <span>Vous serez inscrit en priorité sur la liste d'attente (FIFO). Dès qu'un participant annule (&gt;= 12h avant), une place vous sera réservée avec un délai de confirmation de <strong>1 heure</strong> avant proposition au suivant.</span>
+        </div>
+
+        <!-- Booking Form -->
+        <form id="activeBookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-bold text-neutral-700 mb-1">Votre Nom &amp; Prénom</label>
+            <input type="text" id="bookingName" required placeholder="Ex : Jean-Yves Kouassi" class="w-full bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-brand-red outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-neutral-700 mb-1">Numéro Mobile (Wave / OM / MTN)</label>
+            <input type="tel" id="bookingPhone" required placeholder="Ex : +225 07 00 00 00 00" class="w-full bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-brand-red outline-none" />
+          </div>
+
+          <!-- Membership vs Direct Payment vs Session Credit toggle -->
+          <div>
+            <label class="block text-xs font-bold text-neutral-700 mb-1">Mode d'accès</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <label class="border border-brand-border p-2.5 rounded-xl cursor-pointer flex items-center gap-2 hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="accessMode" value="MEMBERSHIP" checked onchange="handleAccessModeChange('MEMBERSHIP')" class="text-brand-red focus:ring-brand-red"/>
+                <span class="text-xs font-bold text-neutral-800">Pass Membre</span>
+              </label>
+              <label id="creditOptionContainer" class="border border-brand-border p-2.5 rounded-xl cursor-pointer flex items-center gap-2 hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="accessMode" value="SESSION_CREDIT" onchange="handleAccessModeChange('SESSION_CREDIT')" class="text-brand-red focus:ring-brand-red"/>
+                <span class="text-xs font-bold text-brand-dark">Crédit (<span id="creditCountInRadio">1</span>)</span>
+              </label>
+              <label class="border border-brand-border p-2.5 rounded-xl cursor-pointer flex items-center gap-2 hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="accessMode" value="PAYMENT" onchange="handleAccessModeChange('PAYMENT')" class="text-brand-red focus:ring-brand-red"/>
+                <span class="text-xs font-bold text-neutral-800">Paiement Mobile</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Mobile Money Provider Selection (Shown if payment chosen) -->
+          <div id="paymentProviderBlock" class="hidden space-y-2 pt-1 border-t border-brand-border">
+            <span class="text-[11px] font-bold text-neutral-600">Choisissez votre opérateur Mobile Money :</span>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="border border-brand-border p-2 rounded-xl text-center cursor-pointer hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="mobileProvider" value="WAVE" checked class="sr-only"/>
+                <div class="text-xs font-black text-sky-600">Wave</div>
+                <div class="text-[9px] text-neutral-400">Instantané</div>
+              </label>
+              <label class="border border-brand-border p-2 rounded-xl text-center cursor-pointer hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="mobileProvider" value="ORANGE_MONEY" class="sr-only"/>
+                <div class="text-xs font-black text-orange-600">Orange Money</div>
+                <div class="text-[9px] text-neutral-400">Web / USSD</div>
+              </label>
+              <label class="border border-brand-border p-2 rounded-xl text-center cursor-pointer hover:border-brand-red has-[:checked]:border-brand-red has-[:checked]:bg-brand-red/5">
+                <input type="radio" name="mobileProvider" value="MTN_MOMO" class="sr-only"/>
+                <div class="text-xs font-black text-yellow-600">MTN MoMo</div>
+                <div class="text-[9px] text-neutral-400">Push OTP</div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="modalSubmitBtn" class="w-full mt-4 bg-brand-red hover:bg-brand-dark text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md">
+            Confirmer la réservation
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY BOOKINGS & CANCELLATION SIMULATOR MODAL -->
+  <div id="myBookingsModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-brand-border overflow-hidden">
+      <div class="bg-neutral-900 text-white p-5 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="user-check" class="w-5 h-5 text-brand-gold"></i>
+          <h3 class="text-base font-black">Mes Réservations & Annulations</h3>
+        </div>
+        <button onclick="toggleMyBookingsModal()" class="text-white/80 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="bg-brand-cream border border-brand-border p-3 rounded-xl text-xs text-neutral-700">
+          <span class="font-bold text-brand-dark">Politique d'annulation 12 heures :</span> Vous pouvez libérer votre place jusqu'à 12 heures avant la séance pour que la place soit réattribuée automatiquement à la liste d'attente.
+        </div>
+
+        <div id="userBookingsList" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-brand-black text-white px-5 py-4 rounded-2xl shadow-2xl border border-white/20 hidden flex items-center gap-3 max-w-md transition-all">
+    <div id="toastIcon" class="w-8 h-8 rounded-xl bg-brand-green/20 text-brand-green flex items-center justify-center shrink-0">
+      <i data-lucide="check" class="w-5 h-5"></i>
+    </div>
+    <div class="text-xs">
+      <div id="toastTitle" class="font-black text-sm">Réservation Confirmée</div>
+      <div id="toastMessage" class="text-neutral-300 mt-0.5">Votre place a été validée avec succès.</div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC & 25 TRAINING SESSIONS -->
+  <script>
+    // 1. Exact 25 Training Sessions from the original schedule
+    const baseSessions = [
+      {day:"Lundi",time:"06h30",activity:"Suspension T",studio:"Studio Fonctionnel",coach:"Kramo",color:"#16804f",capacity:15,bookedSeats:11,price:10000},
+      {day:"Lundi",time:"09h30",activity:"Pilates",studio:"Cours Collectifs",coach:"Kramo",color:"#e86b25",capacity:25,bookedSeats:25,price:10000}, // FULL demo
+      {day:"Lundi",time:"12h30",activity:"Cross T.",studio:"Studio Fonctionnel",coach:"Soleil",color:"#e8b73e",capacity:15,bookedSeats:14,price:12000},
+      {day:"Lundi",time:"17h30",activity:"Suspension T",studio:"Studio Fonctionnel",coach:"Ismael",color:"#16804f",capacity:15,bookedSeats:8,price:10000},
+      {day:"Lundi",time:"19h00",activity:"Fight T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#872028",capacity:15,bookedSeats:12,price:12000},
+
+      {day:"Mardi",time:"06h30",activity:"Yoga - Pilates",studio:"Cours Collectifs",coach:"Didier",color:"#e8b73e",capacity:25,bookedSeats:16,price:10000},
+      {day:"Mardi",time:"12h30",activity:"Biking",studio:"Studio Biking",coach:"Virtuel",color:"#16804f",capacity:20,bookedSeats:19,price:10000},
+      {day:"Mardi",time:"18h00",activity:"Cross T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#e8b73e",capacity:15,bookedSeats:15,price:12000}, // FULL demo
+      {day:"Mardi",time:"19h30",activity:"Fight T.",studio:"Studio Fonctionnel",coach:"Virtuel",color:"#872028",capacity:15,bookedSeats:9,price:12000},
+
+      {day:"Mercredi",time:"06h30",activity:"Cross T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#e8b73e",capacity:15,bookedSeats:10,price:12000},
+      {day:"Mercredi",time:"09h30",activity:"Danse Classique",studio:"Cours Collectifs",coach:"Privé",color:"#872028",capacity:20,bookedSeats:14,price:15000},
+      {day:"Mercredi",time:"18h00",activity:"Suspension T",studio:"Studio Fonctionnel",coach:"Ismael",color:"#16804f",capacity:15,bookedSeats:7,price:10000},
+      {day:"Mercredi",time:"19h30",activity:"Kizomba",studio:"Cours Collectifs",coach:"Privé",color:"#872028",capacity:25,bookedSeats:18,price:12000},
+
+      {day:"Jeudi",time:"06h30",activity:"Stretching",studio:"Cours Collectifs",coach:"Didier",color:"#16804f",capacity:25,bookedSeats:12,price:8000},
+      {day:"Jeudi",time:"12h30",activity:"Cross T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#e8b73e",capacity:15,bookedSeats:13,price:12000},
+      {day:"Jeudi",time:"18h00",activity:"Body Sculpt",studio:"Cours Collectifs",coach:"Kante",color:"#2675a8",capacity:25,bookedSeats:20,price:10000},
+      {day:"Jeudi",time:"19h30",activity:"Fight T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#872028",capacity:15,bookedSeats:15,price:12000}, // FULL demo
+
+      {day:"Vendredi",time:"06h30",activity:"HIIT T.",studio:"Studio Fonctionnel",coach:"Didier",color:"#2675a8",capacity:15,bookedSeats:11,price:10000},
+      {day:"Vendredi",time:"09h30",activity:"Yoga - Pilates",studio:"Cours Collectifs",coach:"Kramo",color:"#16804f",capacity:25,bookedSeats:15,price:10000},
+      {day:"Vendredi",time:"12h30",activity:"Biking",studio:"Studio Biking",coach:"Didier",color:"#16804f",capacity:20,bookedSeats:17,price:10000},
+      {day:"Vendredi",time:"18h00",activity:"Pilates",studio:"Cours Collectifs",coach:"Ismael",color:"#e86b25",capacity:25,bookedSeats:21,price:10000},
+      {day:"Vendredi",time:"19h30",activity:"Cross T.",studio:"Studio Fonctionnel",coach:"Kante",color:"#e8b73e",capacity:15,bookedSeats:14,price:12000},
+
+      {day:"Samedi",time:"09h30",activity:"Stretching - Danse",studio:"Cours Collectifs",coach:"Privé",color:"#872028",capacity:20,bookedSeats:18,price:12000},
+      {day:"Samedi",time:"12h30",activity:"Gymnastique",studio:"Cours Collectifs",coach:"Soleil",color:"#872028",capacity:20,bookedSeats:16,price:10000},
+      {day:"Samedi",time:"18h00",activity:"Fight T.",studio:"Studio Fonctionnel",coach:"Kramo",color:"#872028",capacity:15,bookedSeats:12,price:12000}
+    ];
+
+    const dayOffsets = { Lundi: 0, Mardi: 1, Mercredi: 2, Jeudi: 3, Vendredi: 4, Samedi: 5 };
+    const allOccurrences = [];
+
+    // Generate dated occurrences for September 2026 across 5 weeks
+    for (let week = 0; week < 5; week++) {
+      baseSessions.forEach((s, idx) => {
+        const d = new Date(2026, 7, 31 + week * 7 + dayOffsets[s.day]);
+        if (d.getMonth() === 8) {
+          allOccurrences.push({
+            ...s,
+            date: d.getDate(),
+            week: week,
+            id: `sess-2026-09-${String(d.getDate()).padStart(2, '0')}-${idx}`,
+            waitlistCount: s.bookedSeats >= s.capacity ? 2 : 0
+          });
+        }
+      });
+    }
+
+    // App State
+    let currentWeek = 0;
+    let selectedSession = null;
+    let userCredits = 1; // 1 session credit available for demo
+    let userBookings = [
+      {
+        id: 'book-init-1',
+        sessionId: allOccurrences[0].id,
+        activity: allOccurrences[0].activity,
+        studio: allOccurrences[0].studio,
+        day: `${allOccurrences[0].day} ${allOccurrences[0].date} septembre`,
+        time: allOccurrences[0].time,
+        coach: allOccurrences[0].coach,
+        status: 'CONFIRMED',
+        type: 'INDIVIDUAL_PURCHASE'
+      }
+    ];
+
+    // DOM Elements
+    const gridEl = document.getElementById('calendarGrid');
+    const weekTitleEl = document.getElementById('currentWeekTitle');
+    const prevWeekBtn = document.getElementById('prevWeekBtn');
+    const nextWeekBtn = document.getElementById('nextWeekBtn');
+    const activitySelect = document.getElementById('activityFilter');
+    const studioSelect = document.getElementById('studioFilter');
+    const daySelect = document.getElementById('dayFilter');
+    const searchInput = document.getElementById('searchFilter');
+    const noResultsEl = document.getElementById('noResultsNotice');
+
+    // Initialize Select Dropdowns
+    function initFilters() {
+      const activities = [...new Set(baseSessions.map(s => s.activity))].sort();
+      activities.forEach(act => {
+        const opt = document.createElement('option');
+        opt.value = act;
+        opt.textContent = act;
+        activitySelect.appendChild(opt);
+      });
+
+      const studios = [...new Set(baseSessions.map(s => s.studio))].sort();
+      studios.forEach(st => {
+        const opt = document.createElement('option');
+        opt.value = st;
+        opt.textContent = st;
+        studioSelect.appendChild(opt);
+      });
+
+      Object.keys(dayOffsets).forEach(day => {
+        const opt = document.createElement('option');
+        opt.value = day;
+        opt.textContent = day;
+        daySelect.appendChild(opt);
+      });
+    }
+
+    // Week title formatter
+    function getWeekTitle(week) {
+      const start = new Date(2026, 7, 31 + week * 7);
+      const end = new Date(2026, 7, 31 + week * 7 + 6);
+      return `Semaine du ${start.getDate()} ${start.toLocaleDateString('fr-FR', {month:'long'})} au ${end.getDate()} ${end.toLocaleDateString('fr-FR', {month:'long'})} 2026`;
+    }
+
+    // Render Calendar
+    function renderCalendar() {
+      const act = activitySelect.value;
+      const st = studioSelect.value;
+      const d = daySelect.value;
+      const q = searchInput.value.trim().toLowerCase();
+
+      const filtered = allOccurrences.filter(item => {
+        const matchWeek = item.week === currentWeek;
+        const matchAct = act === 'all' || item.activity === act;
+        const matchStudio = st === 'all' || item.studio === st;
+        const matchDay = d === 'all' || item.day === d;
+        const matchQuery = !q || [item.activity, item.studio, item.coach].some(v => v.toLowerCase().includes(q));
+        return matchWeek && matchAct && matchStudio && matchDay && matchQuery;
+      });
+
+      gridEl.innerHTML = '';
+      weekTitleEl.textContent = getWeekTitle(currentWeek);
+      prevWeekBtn.disabled = currentWeek === 0;
+      nextWeekBtn.disabled = currentWeek === 4;
+
+      if (filtered.length === 0) {
+        noResultsEl.classList.remove('hidden');
+      } else {
+        noResultsEl.classList.add('hidden');
+        filtered.forEach(session => {
+          const isFull = session.bookedSeats >= session.capacity;
+          const isUserBooked = userBookings.some(b => b.sessionId === session.id && b.status === 'CONFIRMED');
+
+          const card = document.createElement('article');
+          card.className = "bg-white rounded-2xl border border-brand-border p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden group";
+          card.style.borderLeft = `5px solid ${session.color}`;
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <span class="font-black text-brand-red uppercase tracking-wider">${session.day} ${session.date} sept.</span>
+                <span class="font-extrabold text-neutral-800 bg-neutral-100 px-2.5 py-0.5 rounded-full">${session.time}</span>
+              </div>
+              <h4 class="text-base font-black text-brand-black group-hover:text-brand-red transition-colors">${session.activity}</h4>
+              <div class="mt-2 text-xs text-neutral-500 space-y-1">
+                <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-neutral-400"></i> ${session.studio}</div>
+                <div class="flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5 text-neutral-400"></i> Coach : <span class="font-bold text-neutral-700">${session.coach}</span></div>
+              </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-brand-border/60">
+              <div class="flex items-center justify-between text-xs mb-3">
+                <div class="flex items-center gap-1.5 font-bold ${isFull ? 'text-amber-600' : 'text-brand-green'}">
+                  <span class="w-2 h-2 rounded-full ${isFull ? 'bg-amber-500' : 'bg-brand-green'}"></span>
+                  ${isFull ? 'Séance complète' : `${session.capacity - session.bookedSeats} places libres`}
+                </div>
+                <span class="text-neutral-400 text-[11px]">${session.bookedSeats}/${session.capacity}</span>
+              </div>
+
+              ${isUserBooked ? `
+                <button disabled class="w-full py-2.5 rounded-xl bg-brand-green/10 text-brand-green font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-default">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  Réservé
+                </button>
+              ` : `
+                <button onclick="openBookingModal('${session.id}')" class="w-full py-2.5 rounded-xl ${isFull ? 'bg-amber-500 hover:bg-amber-600' : 'bg-brand-red hover:bg-brand-dark'} text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-1.5">
+                  <i data-lucide="${isFull ? 'clock' : 'ticket'}" class="w-3.5 h-3.5"></i>
+                  ${isFull ? "Rejoindre la liste d'attente" : "Réserver ma place"}
+                </button>
+              `}
+            </div>
+          `;
+          gridEl.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+    }
+
+    function handleAccessModeChange(mode) {
+      const block = document.getElementById('paymentProviderBlock');
+      if (mode === 'PAYMENT') {
+        block.classList.remove('hidden');
+      } else {
+        block.classList.add('hidden');
+      }
+    }
+
+    function updateCreditsUI() {
+      document.getElementById('userCreditsDisplay').textContent = userCredits;
+      const creditInRadio = document.getElementById('creditCountInRadio');
+      if (creditInRadio) creditInRadio.textContent = userCredits;
+      const creditRadio = document.querySelector('input[name="accessMode"][value="SESSION_CREDIT"]');
+      if (creditRadio) {
+        creditRadio.disabled = userCredits <= 0;
+        const container = document.getElementById('creditOptionContainer');
+        if (userCredits <= 0) {
+          container.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+          container.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      }
+    }
+
+    // Modal Interactions
+    function openBookingModal(sessionId) {
+      selectedSession = allOccurrences.find(s => s.id === sessionId);
+      if (!selectedSession) return;
+
+      const isFull = selectedSession.bookedSeats >= selectedSession.capacity;
+      const modal = document.getElementById('bookingModal');
+      const modeTag = document.getElementById('modalModeTag');
+      const waitlistNotice = document.getElementById('modalWaitlistNotice');
+      const submitBtn = document.getElementById('modalSubmitBtn');
+
+      document.getElementById('modalSessionTitle').textContent = `${selectedSession.activity} · ${selectedSession.studio}`;
+      document.getElementById('modalDateTime').textContent = `${selectedSession.day} ${selectedSession.date} septembre 2026 à ${selectedSession.time}`;
+      document.getElementById('modalCoachStudio').textContent = `Coach : ${selectedSession.coach} · ${selectedSession.studio}`;
+      document.getElementById('modalCapacityDisplay').textContent = `${selectedSession.capacity - selectedSession.bookedSeats} / ${selectedSession.capacity} places`;
+      document.getElementById('modalPriceDisplay').textContent = `${selectedSession.price.toLocaleString()} FCFA`;
+
+      updateCreditsUI();
+
+      if (isFull) {
+        modeTag.textContent = "Liste d'Attente";
+        modeTag.className = "text-[10px] font-black uppercase tracking-widest bg-amber-400 text-amber-950 px-2 py-0.5 rounded";
+        waitlistNotice.classList.remove('hidden');
+        submitBtn.textContent = "Prendre position sur la file d'attente";
+        submitBtn.className = "w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md";
+      } else {
+        modeTag.textContent = "Réservation";
+        modeTag.className = "text-[10px] font-black uppercase tracking-widest bg-brand-gold text-brand-dark px-2 py-0.5 rounded";
+        waitlistNotice.classList.add('hidden');
+        submitBtn.textContent = "Confirmer la réservation";
+        submitBtn.className = "w-full mt-4 bg-brand-red hover:bg-brand-dark text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md";
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.add('hidden');
+    }
+
+    // Handle Form Submit: Booking & Waitlist Algorithm
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+      if (!selectedSession) return;
+
+      const name = document.getElementById('bookingName').value.trim();
+      const phone = document.getElementById('bookingPhone').value.trim();
+      const isFull = selectedSession.bookedSeats >= selectedSession.capacity;
+      const accessMode = document.querySelector('input[name="accessMode"]:checked').value;
+      const provider = document.querySelector('input[name="mobileProvider"]:checked')?.value || 'WAVE';
+
+      if (accessMode === 'SESSION_CREDIT') {
+        if (userCredits <= 0) {
+          showToast("Solde Insuffisant", "Vous n'avez aucun crédit de séance disponible.");
+          return;
+        }
+        userCredits--;
+        updateCreditsUI();
+      }
+
+      if (isFull) {
+        // Waitlist Algorithm
+        selectedSession.waitlistCount++;
+        showToast(
+          "Ajouté à la Liste d'Attente",
+          `Position #${selectedSession.waitlistCount}. En cas d'annulation (min 12h avant), vous aurez un délai de 1 heure pour confirmer !`
+        );
+      } else {
+        // Concurrency-Safe Booking
+        selectedSession.bookedSeats++;
+        const newBooking = {
+          id: `book-${Date.now()}`,
+          sessionId: selectedSession.id,
+          activity: selectedSession.activity,
+          studio: selectedSession.studio,
+          day: `${selectedSession.day} ${selectedSession.date} septembre`,
+          time: selectedSession.time,
+          coach: selectedSession.coach,
+          status: 'CONFIRMED',
+          type: accessMode,
+          provider: accessMode === 'PAYMENT' ? provider : null
+        };
+        userBookings.push(newBooking);
+        updateBookingsBadge();
+        showToast(
+          "Place Confirmée !",
+          `${selectedSession.activity} réservé pour ${name} (${accessMode === 'SESSION_CREDIT' ? 'Payé par Crédit Séance' : accessMode}). Règle d'annulation 12h active.`
+        );
+      }
+
+      closeBookingModal();
+      renderCalendar();
+      updateMyBookingsView();
+    }
+
+    // Cancellation Simulator (12-Hour Rule & Session Credit Refund)
+    function cancelBookingSimulation(bookingId) {
+      const bIdx = userBookings.findIndex(b => b.id === bookingId);
+      if (bIdx === -1) return;
+
+      const booking = userBookings[bIdx];
+      const session = allOccurrences.find(s => s.id === booking.sessionId);
+
+      // Decrement booked seats
+      if (session && session.bookedSeats > 0) {
+        session.bookedSeats--;
+      }
+
+      // Check if cancellation refunds a session credit (for paid or credit bookings canceled >= 12h)
+      let creditRefunded = false;
+      if (booking.type === 'PAYMENT' || booking.type === 'INDIVIDUAL_PURCHASE' || booking.type === 'SESSION_CREDIT') {
+        userCredits++;
+        creditRefunded = true;
+        updateCreditsUI();
+      }
+
+      // Check if session had a waitlist candidate to promote
+      let waitlistPromoted = false;
+      if (session && session.waitlistCount > 0) {
+        session.waitlistCount--;
+        session.bookedSeats++; // Auto-claimed by first in queue!
+        waitlistPromoted = true;
+      }
+
+      userBookings.splice(bIdx, 1);
+      updateBookingsBadge();
+      updateMyBookingsView();
+      renderCalendar();
+
+      let msg = "Place libérée (>12h).";
+      if (creditRefunded) msg += " +1 Crédit de séance recrédité sur votre compte !";
+      if (waitlistPromoted) msg += " Candidat #1 de la liste d'attente notifié (délai 1h).";
+
+      showToast("Réservation Annulée", msg);
+    }
+
+    function updateBookingsBadge() {
+      const count = userBookings.filter(b => b.status === 'CONFIRMED').length;
+      document.getElementById('bookingCountBadge').textContent = count;
+    }
+
+    function updateMyBookingsView() {
+      const listEl = document.getElementById('userBookingsList');
+      listEl.innerHTML = '';
+
+      if (userBookings.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-8 text-neutral-400 text-xs">
+            <i data-lucide="calendar" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            Aucune réservation en cours.
+          </div>
+        `;
+      } else {
+        userBookings.forEach(b => {
+          const item = document.createElement('div');
+          item.className = "p-3.5 bg-neutral-50 rounded-xl border border-brand-border flex items-center justify-between text-xs";
+          item.innerHTML = `
+            <div>
+              <div class="font-extrabold text-brand-black">${b.activity}</div>
+              <div class="text-neutral-500">${b.day} à ${b.time} · Coach ${b.coach}</div>
+              <div class="text-[10px] text-brand-green font-bold mt-0.5">● Confirmé (${b.type})</div>
+            </div>
+            <button onclick="cancelBookingSimulation('${b.id}')" class="px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 font-bold text-[11px] transition-all">
+              Annuler (Règle 12h)
+            </button>
+          `;
+          listEl.appendChild(item);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    function toggleMyBookingsModal() {
+      const modal = document.getElementById('myBookingsModal');
+      modal.classList.toggle('hidden');
+      updateMyBookingsView();
+    }
+
+    function openBookingFromPlan(planName) {
+      window.location.hash = '#planning';
+      showToast("Formule Sélectionnée", `Veuillez choisir un cours dans le planning pour votre ${planName}.`);
+    }
+
+    function resetFilters() {
+      activitySelect.value = 'all';
+      studioSelect.value = 'all';
+      daySelect.value = 'all';
+      searchInput.value = '';
+      renderCalendar();
+    }
+
+    function showToast(title, message) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 4500);
+    }
+
+    function scrollToTour() {
+      document.getElementById('hero-tour').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleFullscreenMatterport() {
+      const frame = document.getElementById('matterportFrame');
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
+      } else if (frame.webkitRequestFullscreen) {
+        frame.webkitRequestFullscreen();
+      }
+    }
+
+    // Event Listeners
+    [activitySelect, studioSelect, daySelect].forEach(sel => sel.addEventListener('change', renderCalendar));
+    searchInput.addEventListener('input', renderCalendar);
+
+    prevWeekBtn.addEventListener('click', () => {
+      if (currentWeek > 0) {
+        currentWeek--;
+        renderCalendar();
+      }
+    });
+
+    nextWeekBtn.addEventListener('click', () => {
+      if (currentWeek < 4) {
+        currentWeek++;
+        renderCalendar();
+      }
+    });
+
+    // Boot
+    window.addEventListener('DOMContentLoaded', () => {
+      initFilters();
+      renderCalendar();
+      updateBookingsBadge();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
